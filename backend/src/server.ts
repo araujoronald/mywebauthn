@@ -5,6 +5,7 @@ import { helloRoutes } from './infra/api/hello.routes'
 import { registrationRoutes } from './infra/api/registration.routes'
 import { userRoutes } from './infra/api/user.routes'
 import dotenv from 'dotenv'
+import { authenticationRoutes } from './infra/api/authentication.routes'
 dotenv.config()
 
 const app = express()
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(helloRoutes)
 app.use(userRoutes)
 app.use(registrationRoutes)
+app.use(authenticationRoutes)
 
 const port = 3000
 app.listen(port, () => {

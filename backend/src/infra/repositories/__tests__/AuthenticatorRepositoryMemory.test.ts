@@ -3,6 +3,8 @@ import User from '../../../domain/entities/User'
 import AuthenticatorRepository from '../../../domain/repositories/AuthenticatorRepository'
 import AuthenticatorRepositoryMemory from '../AuthenticatorRepositoryMemory'
 import Authenticator, { AuthenticatorTransport, CredentialDeviceType } from '../../../domain/entities/Authenticator'
+import * as uuid from 'uuid'
+
 
 describe('AuthCredential Repository Memory', () => {
 
@@ -16,7 +18,7 @@ describe('AuthCredential Repository Memory', () => {
 
     it('must be save and find a new AuthCredential', async () => {
         const user = User.create('Araujo')
-        const authenticator = Authenticator.create(textEncoder.encode('pk'), 1, CredentialDeviceType.SINGLE_DEVICE, false, [AuthenticatorTransport.USB], user)
+        const authenticator = Authenticator.create(textEncoder.encode(uuid.v4()), textEncoder.encode('pk'), 1, CredentialDeviceType.SINGLE_DEVICE, false, [AuthenticatorTransport.USB], user)
         const savedAuthenticator = await repository.save(authenticator)
         expect(repository).toBeDefined()
         expect(savedAuthenticator).toBeDefined()
@@ -35,9 +37,9 @@ describe('AuthCredential Repository Memory', () => {
     it('must be find all AuthCredential of the User', async () => {
         const user = User.create('Carvalho')
         const authenticatorsToSave = [
-            Authenticator.create(textEncoder.encode('pk'), 1, CredentialDeviceType.SINGLE_DEVICE, false, [AuthenticatorTransport.BLUETOOTH], user),
-            Authenticator.create(textEncoder.encode('pk2'), 2, CredentialDeviceType.MULTI_DEVICE, true, [AuthenticatorTransport.USB], user),
-            Authenticator.create(textEncoder.encode('pk3'), 3, CredentialDeviceType.SINGLE_DEVICE, true, [AuthenticatorTransport.NFC], user)
+            Authenticator.create(textEncoder.encode(uuid.v4()), textEncoder.encode('pk'), 1, CredentialDeviceType.SINGLE_DEVICE, false, [AuthenticatorTransport.BLUETOOTH], user),
+            Authenticator.create(textEncoder.encode(uuid.v4()), textEncoder.encode('pk2'), 2, CredentialDeviceType.MULTI_DEVICE, true, [AuthenticatorTransport.USB], user),
+            Authenticator.create(textEncoder.encode(uuid.v4()), textEncoder.encode('pk3'), 3, CredentialDeviceType.SINGLE_DEVICE, true, [AuthenticatorTransport.NFC], user)
         ]
         for (const auth of authenticatorsToSave) {
             await repository.save(auth)

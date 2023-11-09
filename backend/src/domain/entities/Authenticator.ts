@@ -1,5 +1,4 @@
 import User from './User'
-import * as uuid from 'uuid'
 
 export default class Authenticator {
     credentialID: Uint8Array
@@ -20,8 +19,8 @@ export default class Authenticator {
         this.user = user
     }
 
-    static create(credentialPublicKey: Uint8Array, counter: number, credentialDeviceType: CredentialDeviceType, backedUp: boolean, transports: AuthenticatorTransport[], user: User) {
-        return new Authenticator(new TextEncoder().encode(uuid.v4()), credentialPublicKey, counter, credentialDeviceType, backedUp, transports, user)
+    static create(credentialId: Uint8Array, credentialPublicKey: Uint8Array, counter: number, credentialDeviceType: CredentialDeviceType, backedUp: boolean, transports: AuthenticatorTransport[], user: User) {
+        return new Authenticator(credentialId, credentialPublicKey, counter, credentialDeviceType, backedUp, transports, user)
     }
 }
 
