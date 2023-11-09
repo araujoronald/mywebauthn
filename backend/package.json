@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "tsx src/server.tnoms",
+    "start": "tsx src/server.ts",
     "build": "tsup src",
     "test": "vitest"
   },
