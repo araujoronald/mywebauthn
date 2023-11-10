@@ -1,8 +1,10 @@
-const { startRegistration } = SimpleWebAuthnBrowser;
+const { startRegistration, startAuthentication } = SimpleWebAuthnBrowser;
 
+let userId
 
 async function registration() {
 
+    // criando um novo usuário
     const dataUserToSend = {
         'name': document.getElementById('usernameInput').value,
     }
@@ -16,24 +18,32 @@ async function registration() {
         body: JSON.stringify(dataUserToSend)
     });
 
-    const responseStatus = responseCreateUser.status
-    if (!responseCreateUser.ok) {
-        console.error('Erro na solicitação de criação de usuário. Status: ' + responseStatus);
+    if (!responseCreateUser.status >= 300) {
+        console.error('Erro na solicitação de criação de usuário. Status: ' + responseCreateUser.status);
     }
 
     const responseUserJson = await responseCreateUser.json();
-    const registrationOptionsResponse = await fetch('http://host.docker.internal:3000/registration/' + responseUserJson.id);
+    console.log('responseUserJson', responseUserJson);
+    userId = responseUserJson.id
 
 
+    // buscando as opções para registro de um novo usuário
+    const responseRegistrationOptions = await fetch('http://host.docker.internal:3000/registration/' + userId);
+    if (!responseRegistrationOptions.status >= 300) {
+        console.error('Erro ao recuperar as opções para registro. Status: ' + responseRegistrationOptions.status);
+    }
 
+
+    // iniciando o authenticador webauthn
+    const responseRegistrationOptionsJson = await responseRegistrationOptions.json()
+    console.log('responseRegistrationOptionsJson', responseRegistrationOptionsJson);
 
     let reponseAuthenticator;
     try {
-        reponseAuthenticator = await startRegistration(await registrationOptionsResponse.json());
+        reponseAuthenticator = await startRegistration(responseRegistrationOptionsJson);
     } catch (error) {
-        // Some basic error handling
         if (error.name === 'InvalidStateError') {
-            alert('Error: Authenticator was probably already registered by user');
+            alert('Erro: O Autenticador já deve estar registrado para o usuário informado');
         } else {
             alert(error);
         }
@@ -41,33 +51,71 @@ async function registration() {
         throw error;
     }
 
-    responseStatus = reponseAuthenticator.status
-    if (!reponseAuthenticator.ok) {
-        console.error('Erro na solicitação de criação de usuário. Status: ' + responseStatus);
-    }
-
-    const responseAuthenticatorJson = await reponseAuthenticator.json();
-    console.log(responseAuthenticatorJson);
-
-
-    // POST the response to the endpoint that calls
-    // @simplewebauthn/server -> verifyRegistrationResponse()
-    const verificationResp = await fetch('http://host.docker.internal:3000/verify-registration', {
+    // invocando o serviço de verificação do autenticador
+    const responseVerifyRegistration = await fetch('http://host.docker.internal:3000/registration/verify/' + userId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(authenticatorResponse),
+        body: JSON.stringify(reponseAuthenticator),
     });
 
-    // Wait for the results of verification
-    const verificationJSON = await verificationResp.json();
-
-    // Show UI appropriate for the `verified` status
-    if (verificationJSON && verificationJSON.verified) {
-        alert('Success!');
-    } else {
-        alert(`Oh no, something went wrong! Response: <pre>${JSON.stringify(verificationJSON)}</pre>`);
+    if (!responseVerifyRegistration.status >= 300) {
+        console.error('Erro ao verificar as opções para registro. Status: ' + responseVerifyRegistration.status);
     }
+
+    // inspecionando a resposta do serviço de verificação
+    const responseVerifyRegistrationJSON = await responseVerifyRegistration.json();
+    console.log('responseVerifyRegistrationJSON', responseVerifyRegistrationJSON);
+
+    if (responseVerifyRegistrationJSON && responseVerifyRegistrationJSON.verified) {
+        alert('Boa! Tudo certo com o processo de registro.');
+    } else {
+        alert(`Erro no processo de verificação do registro: <pre>${JSON.stringify(responseVerifyRegistrationJSON)}</pre>`);
+    }
+}
+
+
+async function authentication() {
+
+    // buscando as opções para um processo de autenticação do usuário
+    const responseAuthenticationOptions = await fetch('http://host.docker.internal:3000/authentication/' + userId);
+    if (!responseAuthenticationOptions.status >= 300) {
+        console.error('Erro ao verificar as opções para autenticação. Status: ' + responseAuthenticationOptions.status);
+    }
+
+    // iniciando o processo de autenticação no autenticador webauthn
+    const responseAuthenticationOptionsJson = await responseAuthenticationOptions.json()
+    console.log('responseAuthenticationOptionsJson', responseAuthenticationOptionsJson);
+    let reponseAuthenticator;
+    try {
+        reponseAuthenticator = await startAuthentication(responseAuthenticationOptionsJson);
+    } catch (error) {
+        alert(error);
+        throw error;
+    }
+
+    // invocando o serviço para verificar o desafio de autenticação
+    const responseVerifyAuthentication = await fetch('http://host.docker.internal:3000/authentication/verify/' + userId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reponseAuthenticator),
+    });
+
+    if (!responseVerifyAuthentication.status >= 300) {
+        console.error('Erro ao verificar o desafio de autenticação. Status: ' + responseVerifyAuthentication.status);
+    }
+
+    const responseVerifyAuthenticationJSON = await responseVerifyAuthentication.json();
+    console.log('responseVerifyAuthenticationJSON', responseVerifyAuthenticationJSON);
+
+    if (responseVerifyAuthenticationJSON && responseVerifyAuthenticationJSON.verified) {
+        alert('Pronto! Usuário autenticado via WebAuthn');
+    } else {
+        alert(`Erro no processo de verificação da autenticação: <pre>${JSON.stringify(responseVerifyAuthenticationJSON)}</pre>`);
+    }
+
 }
 

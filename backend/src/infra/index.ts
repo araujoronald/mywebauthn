@@ -1,5 +1,5 @@
-import AuthenticatorRepositoryMemory from './repositories/AuthenticatorRepositoryMemory'
-import UserRepositoryMemory from './repositories/UserRepositoryMemory'
+// import AuthenticatorRepositoryMemory from './repositories/memory/AuthenticatorRepositoryMemory'
+// import UserRepositoryMemory from './repositories/memory/UserRepositoryMemory'
 import SimpleWebAuthnService from './services/SimpleWebAuthnService'
 import GenerateRegistration from '../application/usecases/GenerateRegistration'
 import GenerateRegistrationController from './controllers/GenerateRegistrationController'
@@ -11,11 +11,15 @@ import GenerateAuthentication from '../application/usecases/GenerateAuthenticati
 import GenerateAuthenticationController from './controllers/GenerateAuthenticationController'
 import VerifyAuthentication from '../application/usecases/VerifyAuthentication'
 import VerifyAuthenticationController from './controllers/VerifyAuthenticationController'
+import AuthenticatorRepositoryPostgres from './repositories/postgres/AuthenticatorRepositoryPostgres'
+import UserRepositoryPostgres from './repositories/postgres/UserRepositoryPostgres'
 
 const webAuthnService = new SimpleWebAuthnService()
 
-const userRepository = new UserRepositoryMemory()
-const authenticatorRepository = new AuthenticatorRepositoryMemory()
+// const userRepository = new UserRepositoryMemory()
+// const authenticatorRepository = new AuthenticatorRepositoryMemory()
+const userRepository = new UserRepositoryPostgres()
+const authenticatorRepository = new AuthenticatorRepositoryPostgres()
 
 const generateRegistration = new GenerateRegistration(webAuthnService, userRepository, authenticatorRepository)
 const verifyRegistration = new VerifyRegistration(webAuthnService, userRepository, authenticatorRepository)

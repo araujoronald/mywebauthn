@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import User from '../../../domain/entities/User'
 import AuthenticatorRepository from '../../../domain/repositories/AuthenticatorRepository'
-import AuthenticatorRepositoryMemory from '../AuthenticatorRepositoryMemory'
+import AuthenticatorRepositoryMemory from '../memory/AuthenticatorRepositoryMemory'
 import Authenticator, { AuthenticatorTransport, CredentialDeviceType } from '../../../domain/entities/Authenticator'
 import * as uuid from 'uuid'
 
@@ -22,7 +22,7 @@ describe('AuthCredential Repository Memory', () => {
         const savedAuthenticator = await repository.save(authenticator)
         expect(repository).toBeDefined()
         expect(savedAuthenticator).toBeDefined()
-        const found = await repository.find(savedAuthenticator!.credentialID)
+        const found = await repository.find(Buffer.from(savedAuthenticator!.credentialID).toString('base64url'))
         expect(found).toBeDefined()
         expect(found?.credentialID).toBeDefined()
         expect(found?.credentialID).toEqual(savedAuthenticator?.credentialID)

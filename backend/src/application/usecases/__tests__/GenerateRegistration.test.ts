@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import SimpleWebAuthnService from '../../../infra/services/SimpleWebAuthnService'
 import UserRepositoryMemory from '../../../infra/repositories/UserRepositoryMemory'
-import AuthenticatorRepositoryMemory from '../../../infra/repositories/AuthenticatorRepositoryMemory'
+import AuthenticatorRepositoryMemory from '../../../infra/repositories/memory/AuthenticatorRepositoryMemory'
 import User from '../../../domain/entities/User'
 import GenerateRegistration from '../GenerateRegistration'
 

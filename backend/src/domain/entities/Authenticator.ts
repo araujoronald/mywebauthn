@@ -1,6 +1,7 @@
 import User from './User'
 
 export default class Authenticator {
+    id: string
     credentialID: Uint8Array
     credentialPublicKey: Uint8Array
     counter: number
@@ -9,7 +10,8 @@ export default class Authenticator {
     transports: AuthenticatorTransport[]
     user: User
 
-    private constructor(credentialID: Uint8Array, credentialPublicKey: Uint8Array, counter: number, credentialDeviceType: CredentialDeviceType, credentialBackedUp: boolean, transports: AuthenticatorTransport[], user: User) {
+    private constructor(id: string, credentialID: Uint8Array, credentialPublicKey: Uint8Array, counter: number, credentialDeviceType: CredentialDeviceType, credentialBackedUp: boolean, transports: AuthenticatorTransport[], user: User) {
+        this.id = id
         this.credentialID = credentialID
         this.credentialPublicKey = credentialPublicKey
         this.counter = counter
@@ -20,7 +22,11 @@ export default class Authenticator {
     }
 
     static create(credentialId: Uint8Array, credentialPublicKey: Uint8Array, counter: number, credentialDeviceType: CredentialDeviceType, backedUp: boolean, transports: AuthenticatorTransport[], user: User) {
-        return new Authenticator(credentialId, credentialPublicKey, counter, credentialDeviceType, backedUp, transports, user)
+        return new Authenticator(Buffer.from(credentialId).toString('base64url'), credentialId, credentialPublicKey, counter, credentialDeviceType, backedUp, transports, user)
+    }
+
+    static load(id: string, credentialId: Uint8Array, credentialPublicKey: Uint8Array, counter: number, credentialDeviceType: CredentialDeviceType, backedUp: boolean, transports: AuthenticatorTransport[], user: User) {
+        return new Authenticator(id, credentialId, credentialPublicKey, counter, credentialDeviceType, backedUp, transports, user)
     }
 }
 

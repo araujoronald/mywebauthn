@@ -19,6 +19,7 @@ export default class GenerateAuthentication {
         const user = await this.userRepository.find(userId)
         const userAuthenticators = await this.authenticatorRepository.findAll(user)
         const authenticationOptions = await this.webAuthnService.generateAuthenticationOptions(RelyingParty.ID, userAuthenticators)
+
         user.challenge = authenticationOptions.challenge
         await this.userRepository.update(user)
         return authenticationOptions

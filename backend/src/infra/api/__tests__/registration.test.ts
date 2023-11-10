@@ -18,7 +18,6 @@ describe('Registration REST API', () => {
             .set('Accept', 'application/json')
 
 
-        console.log(response.body)
         expect(response.status).toBe(200)
         expect(response.body.rp.id).toEqual(RelyingParty.ID)
         expect(response.body.rp.name).toEqual(RelyingParty.NAME)

@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import User from '../../../domain/entities/User'
 import UserRepository from '../../../domain/repositories/UserRepository'
-import UserRepositoryMemory from '../UserRepositoryMemory'
+import UserRepositoryMemory from '../memory/UserRepositoryMemory'
 
-describe('User Repository Memory', () => {
+
+describe('User Repository', () => {
 
     let repository: UserRepository
 

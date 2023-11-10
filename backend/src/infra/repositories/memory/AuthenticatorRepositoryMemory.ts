@@ -1,14 +1,14 @@
-import Authenticator from '../../domain/entities/Authenticator'
-import User from '../../domain/entities/User'
-import AuthenticatorRepository from '../../domain/repositories/AuthenticatorRepository'
+import Authenticator from '../../../domain/entities/Authenticator'
+import User from '../../../domain/entities/User'
+import AuthenticatorRepository from '../../../domain/repositories/AuthenticatorRepository'
 
 export default class AuthenticatorRepositoryMemory implements AuthenticatorRepository {
 
     authenticators: Authenticator[] = []
 
-    async find(id: Uint8Array): Promise<Authenticator> {
+    async find(id: string): Promise<Authenticator> {
         const found = this.authenticators.find((auth) => {
-            return auth.credentialID == id
+            return auth.id == id
         })
         return found!
     }
