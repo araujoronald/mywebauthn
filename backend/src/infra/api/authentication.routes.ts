@@ -3,6 +3,10 @@ import { generateAuthenticationController, verifyAuthenticationController } from
 
 const router = Router()
 
+router.get('/authentication', (request, response) => {
+    return generateAuthenticationController.handle(request, response)
+})
+
 router.get('/authentication/:uid', (request, response) => {
     return generateAuthenticationController.handle(request, response)
 })

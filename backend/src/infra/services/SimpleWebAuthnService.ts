@@ -21,7 +21,6 @@ export default class SimpleWebAuthnService implements WebAuthnService {
             authenticatorSelection: {
                 residentKey: 'preferred',
                 userVerification: 'preferred',
-                authenticatorAttachment: 'platform',
             }
         })
         return registrationOptions
@@ -48,9 +47,10 @@ export default class SimpleWebAuthnService implements WebAuthnService {
             allowCredentials: userAuthenticators.map(authenticator => ({
                 id: authenticator.credentialID,
                 type: 'public-key',
-                transports: authenticator.transports,
+                transports: authenticator.transports
             })),
             userVerification: 'preferred',
+
         })
         return authenticationOptions
     }

@@ -2,6 +2,9 @@
 <html lang="pt-br">
 
 <head>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+    <script src="js/app.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My WebAuthn</title>
@@ -27,8 +30,8 @@
             <div id="form-div" class="d-flex justify-content-center align-items-center">
                 <form id="webauthForm" class="form-signin" novalidate>
                     <div class="form-label-group">
-                        <input type="text" class="form-control form-control-lg" id="usernameInput" minlength="3"
-                            required>
+                        <input type="text" class="form-control form-control-lg" id="usernameInput" x-model="username"
+                            autocomplete="username webauthn">
                         <div class="invalid-feedback text-start ps-3">
                             Favor informar um nome de usuário
                         </div>
@@ -46,9 +49,7 @@
         </div>
 
     </div>
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
-    <script src="js/app.js"></script>
+
 </body>
 
 </html>

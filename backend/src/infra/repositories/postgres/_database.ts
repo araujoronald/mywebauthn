@@ -4,7 +4,7 @@ const pgp = pgPromise()
 const dbPostgres = pgp({
     user: 'postgres',
     password: '1234',
-    host: 'localhost',
+    host: 'postgresdb',
     port: 5432,
     database: 'mywebauthn'
 })

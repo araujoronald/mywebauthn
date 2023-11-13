@@ -1,6 +1,10 @@
-const { startRegistration, startAuthentication } = SimpleWebAuthnBrowser;
+const { startRegistration, startAuthentication, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 
 let userId
+
+if (!browserSupportsWebAuthn()) {
+    alert('navegador não suporta webauthn')
+}
 
 async function registration() {
 
@@ -89,7 +93,7 @@ async function authentication() {
     console.log('responseAuthenticationOptionsJson', responseAuthenticationOptionsJson);
     let reponseAuthenticator;
     try {
-        reponseAuthenticator = await startAuthentication(responseAuthenticationOptionsJson);
+        reponseAuthenticator = await startAuthentication(responseAuthenticationOptionsJson, true);
     } catch (error) {
         alert(error);
         throw error;

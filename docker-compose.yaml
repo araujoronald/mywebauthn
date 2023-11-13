@@ -1,0 +1,39 @@
+volumes:
+  data:
+    name: data
+
+services:
+  postgresdb:
+    image: postgres:14
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+
+  backend-api:
+    container_name: backend-api
+    depends_on:
+      - postgresdb
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - /app/node_modules
+      - ./backend:/app
+    ports:
+      - 3000:3000
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+
+  frontend:
+    container_name: frontend
+    image: nginx
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    ports:
+      - "80:80"
+    environment:
+      - NGINX_PORT=80
