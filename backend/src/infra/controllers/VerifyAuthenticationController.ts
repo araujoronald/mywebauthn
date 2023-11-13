@@ -26,7 +26,8 @@ export default class VerifyAuthenticationController {
         }
 
         try {
-            const result = await verifyAuthentication.execute(userId, body, origin)
+            const challenge = request.params.challenge
+            const result = await verifyAuthentication.execute(userId, body, origin, challenge)
             return response.status(200).type('application/json').json(result)
 
         } catch (error) {

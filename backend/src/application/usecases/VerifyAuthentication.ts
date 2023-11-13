@@ -15,15 +15,19 @@ export default class VerifyAuthentication {
         this.authenticatorRepository = authenticatorRepository
     }
 
-    async execute(userId: string, body: any, origin: string) {
+    async execute(userId: string, body: any, origin: string, challenge: string) {
         const user = await this.userRepository.find(userId)
         const authenticator = await this.authenticatorRepository.find(body.id)
 
-        const verification = await this.webAuthnService.verifyAuthenticationResponse(RelyingParty.ID, user.challenge, body, origin, authenticator)
+        const verification = await this.webAuthnService.verifyAuthenticationResponse(RelyingParty.ID, challenge, body, origin, authenticator)
 
         const authenticationInfo = verification.authenticationInfo
         authenticator.counter = authenticationInfo.newCounter
         await this.authenticatorRepository.save(authenticator)
+        verification.user = {
+            'id': user.id,
+            'name': user.name
+        }
         return verification
     }
 }

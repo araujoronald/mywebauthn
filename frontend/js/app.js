@@ -83,7 +83,13 @@ async function registration() {
 async function authentication() {
 
     // buscando as opções para um processo de autenticação do usuário
-    const responseAuthenticationOptions = await fetch('http://host.docker.internal:3000/authentication/' + userId);
+    let responseAuthenticationOptions;
+    if (userId) {
+        responseAuthenticationOptions = await fetch('http://host.docker.internal:3000/authentication/' + userId);
+    } else {
+        responseAuthenticationOptions = await fetch('http://host.docker.internal:3000/authentication');
+    }
+
     if (!responseAuthenticationOptions.status >= 300) {
         console.error('Erro ao verificar as opções para autenticação. Status: ' + responseAuthenticationOptions.status);
     }
@@ -95,12 +101,15 @@ async function authentication() {
     try {
         reponseAuthenticator = await startAuthentication(responseAuthenticationOptionsJson, true);
     } catch (error) {
-        alert(error);
+        console.log(error);
         throw error;
     }
 
+    challenge = responseAuthenticationOptionsJson.challenge
+    userId = reponseAuthenticator.response.userHandle
+
     // invocando o serviço para verificar o desafio de autenticação
-    const responseVerifyAuthentication = await fetch('http://host.docker.internal:3000/authentication/verify/' + userId, {
+    const responseVerifyAuthentication = await fetch('http://host.docker.internal:3000/authentication/verify/' + userId + "/" + challenge, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -116,10 +125,12 @@ async function authentication() {
     console.log('responseVerifyAuthenticationJSON', responseVerifyAuthenticationJSON);
 
     if (responseVerifyAuthenticationJSON && responseVerifyAuthenticationJSON.verified) {
-        alert('Pronto! Usuário autenticado via WebAuthn');
+        alert('Pronto! Usuário autenticado via WebAuthn: ' + responseVerifyAuthenticationJSON.user.name);
     } else {
         alert(`Erro no processo de verificação da autenticação: <pre>${JSON.stringify(responseVerifyAuthenticationJSON)}</pre>`);
     }
 
 }
+
+authentication()
 

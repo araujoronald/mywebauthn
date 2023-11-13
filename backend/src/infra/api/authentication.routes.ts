@@ -15,4 +15,8 @@ router.post('/authentication/verify/:uid', (request, response) => {
     return verifyAuthenticationController.handle(request, response)
 })
 
+router.post('/authentication/verify/:uid/:challenge', (request, response) => {
+    return verifyAuthenticationController.handle(request, response)
+})
+
 export { router as authenticationRoutes }
