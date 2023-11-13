@@ -9,7 +9,6 @@ export default class UserRepositoryPostgres implements UserRepository {
 
     async find(id: string): Promise<User> {
         const found = await dbPostgres.one('SELECT * FROM users u WHERE u.id=$1', [id])
-        console.log('found', found)
 
         let user = null
         if (found) {

@@ -18,10 +18,8 @@ export default class VerifyRegistration {
 
     async execute(userId: string, body: any, origin: string) {
         const user = await this.userRepository.find(userId)
-        console.log('user', user)
 
         const verification = await this.webAuthnService.verifyRegistrationResponse(RelyingParty.ID, user.challenge, body, origin)
-        console.log('verification', verification)
         const registrationInfo = verification.registrationInfo
         const authenticator = Authenticator.create(
             registrationInfo.credentialID,
@@ -33,9 +31,7 @@ export default class VerifyRegistration {
             user
         )
 
-        console.log('Salvando a autenticação no DB')
         await this.authenticatorRepository.save(authenticator)
-        console.log('Autenticação salva')
         return verification
     }
 }
