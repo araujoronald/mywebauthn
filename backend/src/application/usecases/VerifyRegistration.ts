@@ -19,7 +19,12 @@ export default class VerifyRegistration {
     async execute(userId: string, body: any, origin: string) {
         const user = await this.userRepository.find(userId)
 
-        const verification = await this.webAuthnService.verifyRegistrationResponse(RelyingParty.ID, user.challenge, body, origin)
+        const verification = await this.webAuthnService.verifyRegistrationResponse(
+            RelyingParty.ID, 
+            user.challenge, 
+            body, 
+            origin
+        )
         const registrationInfo = verification.registrationInfo
         const authenticator = Authenticator.create(
             registrationInfo.credentialID,

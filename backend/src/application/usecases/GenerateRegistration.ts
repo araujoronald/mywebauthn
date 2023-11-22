@@ -18,7 +18,12 @@ export default class GenerateRegistration {
     async execute(userId: string) {
         const user = await this.userRepository.find(userId)
         const userAuthenticators = await this.authenticatorRepository.findAll(user)
-        const registrationOptions = await this.webAuthnService.generateRegistrationOptions(RelyingParty.ID, RelyingParty.NAME, user, userAuthenticators)
+        const registrationOptions = await this.webAuthnService.generateRegistrationOptions(
+            RelyingParty.ID, 
+            RelyingParty.NAME, 
+            user, 
+            userAuthenticators
+            )
         user.challenge = registrationOptions.challenge
         await this.userRepository.update(user)
         return registrationOptions
