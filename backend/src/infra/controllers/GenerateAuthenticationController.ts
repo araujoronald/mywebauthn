@@ -5,8 +5,9 @@ export default class GenerateAuthenticationController {
 
     async handle(request: Request, response: Response): Promise<Response> {
         const userId = request.params.uid
+        const email = request.params.email
         try {
-            const result = await generateAuthentication.execute(userId)
+            const result = await generateAuthentication.execute(userId, email)
             return response.status(200).type('application/json').json(result)
 
         } catch (error) {

@@ -15,16 +15,23 @@ export default class GenerateAuthentication {
         this.authenticatorRepository = authenticatorRepository
     }
 
-    async execute(userId: string) {
+    async execute(userId: string, email: string) {
+
+        let user
         if (userId) {
-            const user = await this.userRepository.find(userId)
-            const userAuthenticators = await this.authenticatorRepository.findAll(user)
-            const authenticationOptions = await this.webAuthnService.generateAuthenticationOptions(RelyingParty.ID, userAuthenticators)
-            user.challenge = authenticationOptions.challenge
-            await this.userRepository.update(user)
-            return authenticationOptions
+            user = await this.userRepository.find(userId)
+        } else if (email) {
+            user = await this.userRepository.findByEmail(email)
         }
 
-        return await this.webAuthnService.generateAuthenticationOptions(RelyingParty.ID, [])
+        if (!user) {
+            return await this.webAuthnService.generateAuthenticationOptions(RelyingParty.ID, [])
+        }
+
+        const userAuthenticators = await this.authenticatorRepository.findAll(user)
+        const authenticationOptions = await this.webAuthnService.generateAuthenticationOptions(RelyingParty.ID, userAuthenticators)
+        user.challenge = authenticationOptions.challenge
+        await this.userRepository.update(user)
+        return authenticationOptions
     }
 }

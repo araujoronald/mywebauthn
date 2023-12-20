@@ -13,6 +13,13 @@ export default class UserRepositoryMemory implements UserRepository {
         return found!
     }
 
+    async findByEmail(email: string): Promise<User> {
+        const found = this.users.find((user) => {
+            return user.email.value == email
+        })
+        return found!
+    }
+
     async save(user: User): Promise<User> {
         this.users.push(user)
         return user

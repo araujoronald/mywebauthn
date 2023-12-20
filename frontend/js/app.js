@@ -1,6 +1,7 @@
 const { startRegistration, startAuthentication, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 
 let userId
+let userEmail
 
 if (!browserSupportsWebAuthn()) {
     alert('navegador não suporta webauthn')
@@ -24,6 +25,7 @@ async function registration() {
 
     if (!responseCreateUser.status >= 300) {
         console.error('Erro na solicitação de criação de usuário. Status: ' + responseCreateUser.status);
+        return;
     }
 
     const responseUserJson = await responseCreateUser.json();
@@ -82,13 +84,15 @@ async function registration() {
     }
 }
 
-
 async function authentication() {
 
+    userEmail = document.getElementById('usernameInput')?.value
     // buscando as opções para um processo de autenticação do usuário
     let responseAuthenticationOptions;
     if (userId) {
         responseAuthenticationOptions = await fetch('http://localhost:3000/authentication/' + userId);
+    } else if (userEmail) {
+        responseAuthenticationOptions = await fetch('http://localhost:3000/authentication/' + userEmail);
     } else {
         responseAuthenticationOptions = await fetch('http://localhost:3000/authentication');
     }
@@ -102,7 +106,11 @@ async function authentication() {
     console.log('responseAuthenticationOptionsJson', responseAuthenticationOptionsJson);
     let reponseAuthenticator;
     try {
-        reponseAuthenticator = await startAuthentication(responseAuthenticationOptionsJson, true);
+        if (userEmail) {
+            reponseAuthenticator = await startAuthentication(responseAuthenticationOptionsJson);
+        } else {
+            reponseAuthenticator = await startAuthentication(responseAuthenticationOptionsJson, true);
+        }
     } catch (error) {
         console.log(error);
         throw error;

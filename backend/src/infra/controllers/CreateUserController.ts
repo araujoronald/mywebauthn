@@ -14,7 +14,7 @@ export default class CreateUserController {
             const result = await createUser.execute(userName)
             return response.status(200).type('application/json').json({
                 id: result.id,
-                name: result.name
+                name: result.email.value
             })
 
         } catch (error) {

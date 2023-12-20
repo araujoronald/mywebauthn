@@ -11,6 +11,10 @@ export default class CreateUser {
 
     async execute(userName: string) {
         const user = User.create(userName)
+        const found = await this.userRepository.findByEmail(userName)
+        if (found) {
+            return found
+        }
         const savedUser = await this.userRepository.save(user)
         return savedUser
     }

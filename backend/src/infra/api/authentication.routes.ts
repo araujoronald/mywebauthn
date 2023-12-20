@@ -11,6 +11,10 @@ router.get('/authentication/:uid', (request, response) => {
     return generateAuthenticationController.handle(request, response)
 })
 
+router.get('/authentication/email/:email', (request, response) => {
+    return generateAuthenticationController.handle(request, response)
+})
+
 router.post('/authentication/verify/:uid', (request, response) => {
     return verifyAuthenticationController.handle(request, response)
 })

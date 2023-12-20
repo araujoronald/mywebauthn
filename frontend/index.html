@@ -30,7 +30,7 @@
             <div id="form-div" class="d-flex justify-content-center align-items-center">
                 <form id="webauthForm" class="form-signin" novalidate>
                     <div class="form-label-group">
-                        <input type="text" class="form-control form-control-lg" id="usernameInput" x-model="username"
+                        <input type="email" class="form-control form-control-lg" id="usernameInput" x-model="username"
                             autocomplete="username webauthn">
                         <div class="invalid-feedback text-start ps-3">
                             Favor informar um nome de usuário
@@ -39,8 +39,9 @@
 
                     <div id="button-bar" class="row mt-3 p-3">
                         <button type="button" class="btn btn-lg btn-success btn-block mb-3"
-                            onclick="authentication()">Autenticar</button>
-                        <button type="button" class="btn btn-lg btn-primary btn-block" onclick="registration()">Quero me
+                            onclick="authentication();">Autenticar</button>
+                        <button type="button" class="btn btn-lg btn-primary btn-block" onclick="registration();">Quero
+                            me
                             Registrar</button>
                     </div>
                 </form>
@@ -61,7 +62,8 @@
                 <p id="user-name" class="fs-4 fw-light"></p>
             </div>
 
-            <button type="button" class="btn btn-lg btn-danger btn-block mb-3" onclick="location.reload()">Sair</button>
+            <button type="button" class="btn btn-lg btn-danger btn-block mb-3"
+                onclick="location.reload();">Sair</button>
 
 
         </div>
