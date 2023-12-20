@@ -26,7 +26,7 @@ export default class VerifyAuthentication {
         await this.authenticatorRepository.save(authenticator)
         verification.user = {
             'id': user.id,
-            'name': user.name
+            'displayName': user.email.value
         }
         return verification
     }

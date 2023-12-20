@@ -13,7 +13,7 @@ async function registration() {
         'name': document.getElementById('usernameInput').value,
     }
 
-    const responseCreateUser = await fetch('http://host.docker.internal:3000/user', {
+    const responseCreateUser = await fetch('http://localhost:3000/user', {
         method: 'POST',
         cache: 'no-cache',
         headers: {
@@ -32,7 +32,7 @@ async function registration() {
 
 
     // buscando as opções para registro de um novo usuário
-    const responseRegistrationOptions = await fetch('http://host.docker.internal:3000/registration/' + userId);
+    const responseRegistrationOptions = await fetch('http://localhost:3000/registration/' + userId);
     if (!responseRegistrationOptions.status >= 300) {
         console.error('Erro ao recuperar as opções para registro. Status: ' + responseRegistrationOptions.status);
     }
@@ -56,7 +56,7 @@ async function registration() {
     }
 
     // invocando o serviço de verificação do autenticador
-    const responseVerifyRegistration = await fetch('http://host.docker.internal:3000/registration/verify/' + userId, {
+    const responseVerifyRegistration = await fetch('http://localhost:3000/registration/verify/' + userId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -73,7 +73,10 @@ async function registration() {
     console.log('responseVerifyRegistrationJSON', responseVerifyRegistrationJSON);
 
     if (responseVerifyRegistrationJSON && responseVerifyRegistrationJSON.verified) {
-        alert('Boa! Tudo certo com o processo de registro.');
+        document.getElementById('user-id').innerText = responseRegistrationOptionsJson.user.id
+        document.getElementById('user-name').innerText = responseRegistrationOptionsJson.user.displayName
+        showElement(document.getElementById('authenticated-content'))
+        hideElement(document.getElementById('main-content'))
     } else {
         alert(`Erro no processo de verificação do registro: <pre>${JSON.stringify(responseVerifyRegistrationJSON)}</pre>`);
     }
@@ -85,9 +88,9 @@ async function authentication() {
     // buscando as opções para um processo de autenticação do usuário
     let responseAuthenticationOptions;
     if (userId) {
-        responseAuthenticationOptions = await fetch('http://host.docker.internal:3000/authentication/' + userId);
+        responseAuthenticationOptions = await fetch('http://localhost:3000/authentication/' + userId);
     } else {
-        responseAuthenticationOptions = await fetch('http://host.docker.internal:3000/authentication');
+        responseAuthenticationOptions = await fetch('http://localhost:3000/authentication');
     }
 
     if (!responseAuthenticationOptions.status >= 300) {
@@ -109,7 +112,7 @@ async function authentication() {
     userId = reponseAuthenticator.response.userHandle
 
     // invocando o serviço para verificar o desafio de autenticação
-    const responseVerifyAuthentication = await fetch('http://host.docker.internal:3000/authentication/verify/' + userId + "/" + challenge, {
+    const responseVerifyAuthentication = await fetch('http://localhost:3000/authentication/verify/' + userId + "/" + challenge, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -125,11 +128,24 @@ async function authentication() {
     console.log('responseVerifyAuthenticationJSON', responseVerifyAuthenticationJSON);
 
     if (responseVerifyAuthenticationJSON && responseVerifyAuthenticationJSON.verified) {
-        alert('Pronto! Usuário autenticado via WebAuthn: ' + responseVerifyAuthenticationJSON.user.name);
+        document.getElementById('user-id').innerText = responseVerifyAuthenticationJSON.user.id
+        document.getElementById('user-name').innerText = responseVerifyAuthenticationJSON.user.displayName
+        showElement(document.getElementById('authenticated-content'))
+        hideElement(document.getElementById('main-content'))
     } else {
         alert(`Erro no processo de verificação da autenticação: <pre>${JSON.stringify(responseVerifyAuthenticationJSON)}</pre>`);
     }
 
+}
+
+
+
+function showElement(elem) {
+    elem.style.display = "block"
+}
+
+function hideElement(elem) {
+    elem.style.display = "none"
 }
 
 authentication()

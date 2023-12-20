@@ -20,7 +20,7 @@ export default class AuthenticatorRepositoryPostgres implements AuthenticatorRep
                 found.credential_device_type,
                 found.credential_backed_up,
                 found.transports,
-                User.load(found.user_id, found.name, found.challenge)
+                User.load(found.user_id, found.email, found.challenge)
             )
         }
         return authenticator!

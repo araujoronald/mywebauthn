@@ -12,7 +12,7 @@ CREATE DATABASE mywebauthn;
 
 CREATE TABLE public.users (
 	id varchar(50) NOT NULL,
-	"name" varchar(100) NOT NULL,
+	"email" varchar(100) NOT NULL,
 	challenge varchar(255) NOT NULL,
 	CONSTRAINT users_pk PRIMARY KEY (id)
 );

@@ -23,7 +23,7 @@
 
             <div id="description" class="p-2 pb-4">
                 <p class="fs-4 fw-light">
-                    Informe o seu nome de usuário para registro
+                    Informe o seu e-mail
                 </p>
             </div>
 
@@ -38,20 +38,31 @@
                     </div>
 
                     <div id="button-bar" class="row mt-3 p-3">
-                        <button type="button" class="btn btn-lg btn-primary btn-block"
-                            onclick="registration()">Registrar</button>
-                        <button type="button" class="btn btn-lg btn-success btn-block mt-3"
+                        <button type="button" class="btn btn-lg btn-success btn-block mb-3"
                             onclick="authentication()">Autenticar</button>
+                        <button type="button" class="btn btn-lg btn-primary btn-block" onclick="registration()">Quero me
+                            Registrar</button>
                     </div>
                 </form>
             </div>
 
-            <div>
-                <p class="fs-4 fw-light">
-                    Usuário autenticao:
-                </p>
-                <p class="fs-4 fw-light" id="userInfo"></p>
+        </div>
+
+        <div id="authenticated-content" class="container-xl col-xl-8 text-center align-items-center">
+            <div id="header-logo" class="pt-5 pb-4">
+                <img src="img/webauthn-logo.png" />
             </div>
+
+            <div id="description" class="p-2 pb-4">
+                <p class="fs-4 fw-light">
+                    Usuário autenticado
+                </p>
+                <p id="user-id" class="fs-4 fw-light"></p>
+                <p id="user-name" class="fs-4 fw-light"></p>
+            </div>
+
+            <button type="button" class="btn btn-lg btn-danger btn-block mb-3" onclick="location.reload()">Sair</button>
+
 
         </div>
 
@@ -60,3 +71,7 @@
 </body>
 
 </html>
+
+<script>
+    hideElement(document.getElementById('authenticated-content'))
+</script>

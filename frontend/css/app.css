@@ -24,3 +24,11 @@ body {
     padding: 15px;
     margin: 0 auto;
 }
+
+.hide-user-info {
+    display: none;
+}
+
+.hide-main {
+    display: none;
+}

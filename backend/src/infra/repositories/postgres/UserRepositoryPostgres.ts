@@ -14,7 +14,7 @@ export default class UserRepositoryPostgres implements UserRepository {
         if (found) {
             user = User.load(
                 found.id,
-                found.name,
+                found.email,
                 found.challenge
             )
         }
@@ -24,15 +24,15 @@ export default class UserRepositoryPostgres implements UserRepository {
     async save(user: User): Promise<User> {
         await dbPostgres.none('INSERT INTO users VALUES ($1, $2, $3)', [
             user.id,
-            user.name,
+            user.email.value,
             user.challenge
         ])
         return user
     }
 
     async update(user: User): Promise<User> {
-        await dbPostgres.none('UPDATE users SET name=$1, challenge=$2 WHERE id=$3', [
-            user.name,
+        await dbPostgres.none('UPDATE users SET email=$1, challenge=$2 WHERE id=$3', [
+            user.email.value,
             user.challenge,
             user.id
         ])

@@ -17,7 +17,7 @@ describe('AuthCredential Repository Memory', () => {
     })
 
     it('must be save and find a new AuthCredential', async () => {
-        const user = User.create('Araujo')
+        const user = User.create('ronald.ecomp@gmail.com')
         const authenticator = Authenticator.create(textEncoder.encode(uuid.v4()), textEncoder.encode('pk'), 1, CredentialDeviceType.SINGLE_DEVICE, false, [AuthenticatorTransport.USB], user)
         const savedAuthenticator = await repository.save(authenticator)
         expect(repository).toBeDefined()
@@ -35,7 +35,7 @@ describe('AuthCredential Repository Memory', () => {
     })
 
     it('must be find all AuthCredential of the User', async () => {
-        const user = User.create('Carvalho')
+        const user = User.create('ronald@gmail.com')
         const authenticatorsToSave = [
             Authenticator.create(textEncoder.encode(uuid.v4()), textEncoder.encode('pk'), 1, CredentialDeviceType.SINGLE_DEVICE, false, [AuthenticatorTransport.BLUETOOTH], user),
             Authenticator.create(textEncoder.encode(uuid.v4()), textEncoder.encode('pk2'), 2, CredentialDeviceType.MULTI_DEVICE, true, [AuthenticatorTransport.USB], user),

@@ -1,25 +1,26 @@
 import * as uuid from 'uuid'
+import Email from '../vo/Email'
 
 export default class User {
     id: string
-    name: string
+    email: Email
     challenge: string
 
-    private constructor(id: string, name: string, challenge: string) {
+    private constructor(id: string, email: Email, challenge: string) {
         this.id = id
-        this.name = name
+        this.email = email
         this.challenge = challenge
     }
 
-    static create(name: string) {
-        if (!name.trim()) {
+    static create(email: string) {
+        if (!email.trim()) {
             throw new Error('name must have 3 or more characters')
         }
-        return new User(uuid.v4(), name, User.generateChallenge())
+        return new User(uuid.v4(), Email.create(email), User.generateChallenge())
     }
 
-    static load(id: string, name: string, challenge: string) {
-        return new User(id, name, challenge)
+    static load(id: string, email: string, challenge: string) {
+        return new User(id, Email.create(email), challenge)
     }
 
     newChallenge() {

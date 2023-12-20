@@ -10,8 +10,8 @@ export default class SimpleWebAuthnService implements WebAuthnService {
             rpID: relyingPartyId,
             rpName: relyingPartyName,
             userID: user.id,
-            userName: user.name,
-            userDisplayName: user.name,
+            userName: user.email.value,
+            userDisplayName: user.email.value,
             attestationType: 'none',
             excludeCredentials: authenticators.map(authenticator => ({
                 id: authenticator.credentialID,
