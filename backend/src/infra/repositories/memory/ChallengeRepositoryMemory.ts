@@ -5,8 +5,6 @@ export default class ChallengeRepositoryMemory implements ChallengeRepository {
     challenges: Challenge[] = []
 
     async find(sessionId: string): Promise<string> {
-        console.log('MEMORY CHALLENGE DB: ', this.challenges)
-
         const found = this.challenges.find((challenge) => {
             return challenge.sessionId == sessionId
         })
