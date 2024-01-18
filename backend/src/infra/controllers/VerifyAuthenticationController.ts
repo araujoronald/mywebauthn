@@ -25,9 +25,13 @@ export default class VerifyAuthenticationController {
                 .json({ property: 'origin', message: 'header origin is required' })
         }
 
+        let sessionId = request.header('session-id')
+        if (!sessionId) {
+            sessionId = request.sessionID
+        }
+
         try {
-            const challenge = request.params.challenge
-            const result = await verifyAuthentication.execute(userId, body, origin, challenge)
+            const result = await verifyAuthentication.execute(userId, body, origin, sessionId)
             return response.status(200).type('application/json').json(result)
 
         } catch (error) {

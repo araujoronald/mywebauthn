@@ -101,9 +101,11 @@ async function authentication() {
         console.error('Erro ao verificar as opções para autenticação. Status: ' + responseAuthenticationOptions.status);
     }
 
+
     // iniciando o processo de autenticação no autenticador webauthn
     const responseAuthenticationOptionsJson = await responseAuthenticationOptions.json()
     console.log('responseAuthenticationOptionsJson', responseAuthenticationOptionsJson);
+
     let reponseAuthenticator;
     try {
         if (userEmail) {
@@ -116,14 +118,14 @@ async function authentication() {
         throw error;
     }
 
-    challenge = responseAuthenticationOptionsJson.challenge
     userId = reponseAuthenticator.response.userHandle
 
     // invocando o serviço para verificar o desafio de autenticação
-    const responseVerifyAuthentication = await fetch('http://localhost:3000/authentication/verify/' + userId + "/" + challenge, {
+    const responseVerifyAuthentication = await fetch('http://localhost:3000/authentication/verify/' + userId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'session-id': responseAuthenticationOptionsJson.sid
         },
         body: JSON.stringify(reponseAuthenticator),
     });
@@ -143,10 +145,7 @@ async function authentication() {
     } else {
         alert(`Erro no processo de verificação da autenticação: <pre>${JSON.stringify(responseVerifyAuthenticationJSON)}</pre>`);
     }
-
 }
-
-
 
 function showElement(elem) {
     elem.style.display = "block"

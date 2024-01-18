@@ -13,6 +13,7 @@ import VerifyAuthentication from '../application/usecases/VerifyAuthentication'
 import VerifyAuthenticationController from './controllers/VerifyAuthenticationController'
 import AuthenticatorRepositoryPostgres from './repositories/postgres/AuthenticatorRepositoryPostgres'
 import UserRepositoryPostgres from './repositories/postgres/UserRepositoryPostgres'
+import ChallengeRepositoryMemory from './repositories/memory/ChallengeRepositoryMemory'
 
 const webAuthnService = new SimpleWebAuthnService()
 
@@ -20,11 +21,12 @@ const webAuthnService = new SimpleWebAuthnService()
 // const authenticatorRepository = new AuthenticatorRepositoryMemory()
 const userRepository = new UserRepositoryPostgres()
 const authenticatorRepository = new AuthenticatorRepositoryPostgres()
+const challengeRepository = new ChallengeRepositoryMemory()
 
 const generateRegistration = new GenerateRegistration(webAuthnService, userRepository, authenticatorRepository)
 const verifyRegistration = new VerifyRegistration(webAuthnService, userRepository, authenticatorRepository)
-const generateAuthentication = new GenerateAuthentication(webAuthnService, userRepository, authenticatorRepository)
-const verifyAuthentication = new VerifyAuthentication(webAuthnService, userRepository, authenticatorRepository)
+const generateAuthentication = new GenerateAuthentication(webAuthnService, userRepository, authenticatorRepository, challengeRepository)
+const verifyAuthentication = new VerifyAuthentication(webAuthnService, userRepository, authenticatorRepository, challengeRepository)
 const createUser = new CreateUser(userRepository)
 
 const generateRegistrationController = new GenerateRegistrationController()

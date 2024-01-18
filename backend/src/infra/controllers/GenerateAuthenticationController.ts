@@ -4,10 +4,11 @@ import { generateAuthentication } from '..'
 export default class GenerateAuthenticationController {
 
     async handle(request: Request, response: Response): Promise<Response> {
+        const sessionId = request.sessionID
         const userId = request.params.uid
         const email = request.params.email
         try {
-            const result = await generateAuthentication.execute(userId, email)
+            const result = await generateAuthentication.execute(userId, email, sessionId)
             return response.status(200).type('application/json').json(result)
 
         } catch (error) {
