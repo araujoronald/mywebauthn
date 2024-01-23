@@ -89,15 +89,20 @@ async function authentication() {
     userEmail = document.getElementById('usernameInput')?.value
     // buscando as opções para um processo de autenticação do usuário
     let responseAuthenticationOptions;
+    let user;
     if (userId) {
         responseAuthenticationOptions = await fetch('http://localhost:3000/authentication/' + userId);
     } else if (userEmail) {
-        responseAuthenticationOptions = await fetch('http://localhost:3000/authentication/' + userEmail);
+        responseAuthenticationOptions = await fetch('http://localhost:3000/authentication/email/' + userEmail);
+        const userResponse = await fetch('http://localhost:3000/user/' + userEmail)
+        user = await userResponse.json()
+        console.log(user)
     } else {
         responseAuthenticationOptions = await fetch('http://localhost:3000/authentication');
     }
 
     if (!responseAuthenticationOptions.status >= 300) {
+        alert('Tente outra vez com um email de usuário cadastrado');
         console.error('Erro ao verificar as opções para autenticação. Status: ' + responseAuthenticationOptions.status);
     }
 
@@ -119,6 +124,9 @@ async function authentication() {
     }
 
     userId = reponseAuthenticator.response.userHandle
+    if (!userId) {
+        userId = user.id
+    }
 
     // invocando o serviço para verificar o desafio de autenticação
     const responseVerifyAuthentication = await fetch('http://localhost:3000/authentication/verify/' + userId, {

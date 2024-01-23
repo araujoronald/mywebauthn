@@ -27,7 +27,13 @@ export default class GenerateAuthentication {
             user = await this.userRepository.findByEmail(email)
         }
 
+        console.log('USER: ', user)
+        console.log('EMAIL: ', email)
+
         if (!user) {
+            if (email) {
+                throw new Error('Usuário não identificado')
+            }
             const authenticationOptions = await this.webAuthnService.generateAuthenticationOptions(RelyingParty.ID, [])
             const challenge = authenticationOptions.challenge
             await this.challengeRepository.save(sessionId, challenge)
